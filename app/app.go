@@ -33,7 +33,7 @@ type App struct {
 func NewApp(cfg *Config) (*App, error) {
 	errorReporter, err := ops.NewErrorReporter(cfg.ErrorReporterCredentials, cfg.ErrorReporterType)
 
-	db, err := data.NewDB(cfg.DatabaseURL)
+	db, err := data.NewDB(cfg.DatabaseURL, cfg.DatabaseSchema)
 	if err != nil {
 		return nil, errors.Wrap(err, "data.NewDB")
 	}

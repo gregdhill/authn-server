@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"path"
+
 	"github.com/keratin/authn-server/app"
 	"github.com/keratin/authn-server/app/data"
 	"github.com/keratin/authn-server/server"
-	"os"
-	"path"
 )
 
 // VERSION is a value injected at build time with ldflags
@@ -57,7 +58,7 @@ func serve(cfg *app.Config) {
 
 func migrate(cfg *app.Config) {
 	fmt.Println("Running migrations.")
-	err := data.MigrateDB(cfg.DatabaseURL)
+	err := data.MigrateDB(cfg.DatabaseURL, cfg.DatabaseSchema)
 	if err != nil {
 		fmt.Println(err)
 	} else {

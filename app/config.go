@@ -40,6 +40,7 @@ type Config struct {
 	RefreshTokenTTL             time.Duration
 	RedisURL                    *url.URL
 	DatabaseURL                 *url.URL
+	DatabaseSchema              string
 	SessionCookieName           string
 	OAuthCookieName             string
 	SessionSigningKey           []byte
@@ -181,6 +182,16 @@ var configurers = []configurer{
 			c.DatabaseURL = val
 		}
 		return err
+	},
+
+	// DATABASE_SCHEMA is a string that can specify a database schema to operate on.
+	//
+	// Example: public
+	func(c *Config) error {
+		if val, ok := os.LookupEnv("SENTRY_DSN"); ok {
+			c.DatabaseSchema = val
+		}
+		return nil
 	},
 
 	// REDIS_URL is a string format that can specify any option for connecting to

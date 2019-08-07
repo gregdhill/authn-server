@@ -15,20 +15,20 @@ import (
 	sq3 "github.com/mattn/go-sqlite3"
 )
 
-func NewDB(url *url.URL) (*sqlx.DB, error) {
+func NewDB(url *url.URL, schema string) (*sqlx.DB, error) {
 	switch url.Scheme {
 	case "sqlite3":
 		return sqlite3.NewDB(url.Path)
 	case "mysql":
 		return mysql.NewDB(url)
 	case "postgresql", "postgres":
-		return postgres.NewDB(url)
+		return postgres.NewDB(url, schema)
 	default:
 		return nil, fmt.Errorf("Unsupported database: %s", url.Scheme)
 	}
 }
 
-func MigrateDB(url *url.URL) error {
+func MigrateDB(url *url.URL, schema string) error {
 	switch url.Scheme {
 	case "sqlite3":
 		db, err := sqlite3.NewDB(url.Path)
@@ -49,7 +49,7 @@ func MigrateDB(url *url.URL) error {
 		mysql.MigrateDB(db)
 		return nil
 	case "postgresql", "postgres":
-		db, err := postgres.NewDB(url)
+		db, err := postgres.NewDB(url, schema)
 		if err != nil {
 			return err
 		}
